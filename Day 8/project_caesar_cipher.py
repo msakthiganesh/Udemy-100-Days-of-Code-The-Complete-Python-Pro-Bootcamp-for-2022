@@ -3,10 +3,10 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
 direction = input("Type 'encode' to encrypt, type 'decode' to decrypt:\n")
 text = input("Type your message:\n").lower()
 shift = int(input("Type the shift number:\n"))
+
 import itertools
 
-#TODO-1: Create a function called 'encrypt' that takes the 'text' and 'shift' as inputs.
-def encrypt(text:str, shift:int):
+def encrypt(plain_text:str, shift_pos:int):
     encrypted_text = ""
     
     cycle_alph = itertools.cycle(alphabet)
@@ -15,29 +15,30 @@ def encrypt(text:str, shift:int):
         cycle_alphabets.append(val)
         if i > 1000: break
     
-    for char in text:
-        encrypted_text += cycle_alphabets[alphabet.index(char) + shift]
+    for char in plain_text:
+        encrypted_text += cycle_alphabets[alphabet.index(char) + shift_pos]
     
-    return encrypted_text
+    print(f"The encoded output is {encrypted_text}")
 
-
-    #TODO-2: Inside the 'encrypt' function, shift each letter of the 'text' forwards in the alphabet by the shift amount and print the encrypted text.  
-    #e.g. 
-    #plain_text = "hello"
-    #shift = 5
-    #cipher_text = "mjqqt"
-    #print output: "The encoded text is mjqqt"
-
-    ##HINT: How do you get the index of an item in a list:
-    #https://stackoverflow.com/questions/176918/finding-the-index-of-an-item-in-a-list
-
-    ##🐛Bug alert: What happens if you try to encode the word 'civilization'?🐛
-
-#TODO-3: Call the encrypt function and pass in the user inputs. You should be able to test the code and encrypt a message. 
-
+def decrypt(plain_text:str, shift_pos:int):
+    decrypted_text = ""
+    
+    reverse_cycle_alpha = []
+    for i, val in enumerate(itertools.cycle(alphabet)):
+        reverse_cycle_alpha.insert(0, val)
+        if i==len(alphabet)*10 - 1:
+            break
+    
+    for char in plain_text:
+        decrypted_text += reverse_cycle_alpha[reverse_cycle_alpha.index(char) + shift_pos]
+    
+    print(f"The decrypted text is {decrypted_text}")
+    
+    
 if direction == "encode":
-    encrypted_text = encrypt(text, shift)
-    print(encrypted_text)
+    encrypt(plain_text = text, shift_pos = shift)
+elif direction == "decode":
+    decrypt(plain_text = text, shift_pos=shift)
 
 
 
