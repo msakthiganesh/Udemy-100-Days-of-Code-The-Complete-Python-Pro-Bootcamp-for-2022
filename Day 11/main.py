@@ -67,7 +67,7 @@ import random
 
 
 def calculate_score(u_cards, c_cards):
-    return (sum(u_cards), sum(c_cards))
+    return sum(u_cards), sum(c_cards)
 
 def result_logic(user_score, computer_score):
     if user_score > 21:
