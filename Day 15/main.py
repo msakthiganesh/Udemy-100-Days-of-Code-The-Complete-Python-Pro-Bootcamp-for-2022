@@ -32,6 +32,30 @@ def handle_money(drink_price):
         return False
 
 
+def drink_available_logic(drink_data, user_choice, milk_available, water_available, coffee_available, amount_collected):
+    drink = drink_data[user_choice]
+    if milk_available >= drink["milk"] and water_available >= drink["water"] and coffee_available >= drink["coffee"]:
+        enough_money = handle_money(drink_price=drink["price"])
+        if enough_money:
+            print(f"Here is your {user_choice.title()}. Enjoy!")
+            milk_available -= drink["milk"]
+            water_available -= drink["water"]
+            coffee_available -= drink["coffee"]
+            amount_collected += drink["price"]
+        else:
+            print("Sorry, that's not enough money. Money refunded.")
+    elif milk_available < drink["milk"]:
+        print(f"Sorry not enough milk left in the machine for a {user_choice}.")
+    elif water_available < drink["water"]:
+        print(f"Sorry not enough water left in the machine for a {user_choice}.")
+    elif coffee_available < drink["coffee"]:
+        print(f"Sorry not enough coffee left in the machine for a {user_choice}.")
+    else:
+        print("SYSTEM ERROR!!!")
+
+    return milk_available, water_available, coffee_available, amount_collected
+
+
 def main():
     machine_data = start_machine()
     amount_collected = 0
@@ -60,49 +84,32 @@ def main():
 
     continue_serving = True
     while continue_serving:
-        user_choice = input("What would you like? (Espresso/Latte/Cappuccino): ")
-        if user_choice.lower() == "report":
+        user_choice = input("What would you like? (Espresso/Latte/Cappuccino): ").lower()
+        if user_choice == "report":
             report(milk_available, water_available, coffee_available, amount_collected)
-        elif user_choice.lower() == "espresso":
-            drink = drink_data["espresso"]
-            if milk_available >= drink["milk"] and water_available >= drink["water"] and coffee_available >= drink[
-                "coffee"]:
-                enough_money = handle_money(drink_price=drink["price"])
-                if enough_money:
-                    print(f"Here is your {user_choice.title()}. Enjoy!")
-                    milk_available -= drink["milk"]
-                    water_available -= drink["water"]
-                    coffee_available -= drink["coffee"]
-                    amount_collected += drink["price"]
-                else:
-                    print("Sorry, that's not enough money. Money refunded.")
-        elif user_choice.lower() == "latte":
-            drink = drink_data["latte"]
-            if milk_available >= drink["milk"] and water_available >= drink["water"] and coffee_available >= drink[
-                "coffee"]:
-                enough_money = handle_money(drink_price=drink["price"])
-                if enough_money:
-                    print(f"Here is your {user_choice.title()}. Enjoy!")
-                    milk_available -= drink["milk"]
-                    water_available -= drink["water"]
-                    coffee_available -= drink["coffee"]
-                    amount_collected += drink["price"]
-                else:
-                    print("Sorry, that's not enough money. Money refunded.")
-        elif user_choice.lower() == "cappuccino":
-            drink = drink_data["cappuccino"]
-            if milk_available >= drink["milk"] and water_available >= drink["water"] and coffee_available >= drink[
-                "coffee"]:
-                enough_money = handle_money(drink_price=drink["price"])
-                if enough_money:
-                    print(f"Here is your {user_choice.title()}. Enjoy!")
-                    milk_available -= drink["milk"]
-                    water_available -= drink["water"]
-                    coffee_available -= drink["coffee"]
-                    amount_collected += drink["price"]
-                else:
-                    print("Sorry, that's not enough money. Money refunded.")
-        elif user_choice.lower() == "off":
+        elif user_choice == "espresso":
+            milk_available, water_available, coffee_available, amount_collected = drink_available_logic(drink_data,
+                                                                                                        user_choice,
+                                                                                                        milk_available,
+                                                                                                        water_available,
+                                                                                                        coffee_available,
+                                                                                                        amount_collected)
+
+        elif user_choice == "latte":
+            milk_available, water_available, coffee_available, amount_collected = drink_available_logic(drink_data,
+                                                                                                        user_choice,
+                                                                                                        milk_available,
+                                                                                                        water_available,
+                                                                                                        coffee_available,
+                                                                                                        amount_collected)
+        elif user_choice == "cappuccino":
+            milk_available, water_available, coffee_available, amount_collected = drink_available_logic(drink_data,
+                                                                                                        user_choice,
+                                                                                                        milk_available,
+                                                                                                        water_available,
+                                                                                                        coffee_available,
+                                                                                                        amount_collected)
+        elif user_choice == "off":
             print("Turning off machine!")
             continue_serving = False
         else:
